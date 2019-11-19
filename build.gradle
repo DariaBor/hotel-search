@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+}
+
+version '1.0-SNAPSHOT'
+
+ext {
+    componentTimeout = "10"
+    pageTimeout = "5"
+    gradleWrapperVerion = '5.2.1'
+    junitVersion = '4.11'
+    commonsVerion = '2.6'
+    seleniumVerion = '3.141.5'
+    webDriverManagerVersion = '3.3.0'
+    slf4jVersion = '1.7.25'
+    cucumberVersion = '1.2.6'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty "componentTimeout", componentTimeout
+}
+
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
+        }
+    }
+}
+
+dependencies {
+    compile group: 'io.cucumber', name: 'cucumber-java', version: cucumberVersion
+    compile group: 'commons-io', name: 'commons-io', version: commonsVerion
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: seleniumVerion
+    compile group: 'io.github.bonigarcia', name: 'webdrivermanager', version: webDriverManagerVersion
+    compile group: 'junit', name: 'junit', version: junitVersion
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: slf4jVersion
+}
+
+

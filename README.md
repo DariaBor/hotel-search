@@ -1,0 +1,1 @@
+#make sure, that Cucumber plugin is installed in your IDEA and run the tests
